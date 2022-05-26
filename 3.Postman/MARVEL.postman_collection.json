@@ -1,0 +1,84 @@
+{
+	"info": {
+		"_postman_id": "fe8e1557-9306-4f62-9746-964df922d222",
+		"name": "MARVEL",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "LIST",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://gateway.marvel.com:443/v1/public/characters?ts=1653329848&apikey=6829817aea02ad1da01f298e3ede23c0&hash=aeac8dbef68485cfec4736380d227344",
+					"protocol": "https",
+					"host": [
+						"gateway",
+						"marvel",
+						"com"
+					],
+					"port": "443",
+					"path": [
+						"v1",
+						"public",
+						"characters"
+					],
+					"query": [
+						{
+							"key": "ts",
+							"value": "1653329848"
+						},
+						{
+							"key": "apikey",
+							"value": "6829817aea02ad1da01f298e3ede23c0"
+						},
+						{
+							"key": "hash",
+							"value": "aeac8dbef68485cfec4736380d227344"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CHARACTER",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://gateway.marvel.com/v1/public/characters/1011334?apikey=6829817aea02ad1da01f298e3ede23c0&hash=aeac8dbef68485cfec4736380d227344&ts=1653329848",
+					"protocol": "http",
+					"host": [
+						"gateway",
+						"marvel",
+						"com"
+					],
+					"path": [
+						"v1",
+						"public",
+						"characters",
+						"1011334"
+					],
+					"query": [
+						{
+							"key": "apikey",
+							"value": "6829817aea02ad1da01f298e3ede23c0"
+						},
+						{
+							"key": "hash",
+							"value": "aeac8dbef68485cfec4736380d227344"
+						},
+						{
+							"key": "ts",
+							"value": "1653329848"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

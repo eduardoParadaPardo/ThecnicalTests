@@ -1,0 +1,17 @@
+//
+//  ConfigIntegration.xcconfig
+//  TechnicalTest
+//
+//  Created by eduardo parada pardo on 23/5/22.
+//  Copyright © 2022 eduardo parada pardo. All rights reserved.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+BUNDLE_IDENTIFIER = com.technicalTest.example.Integration
+APP_NAME = [Q]technicalTest
+BASEURL = "https:\/\/gateway.marvel.com:443\/v1\/public\/"
+
+APIKEY = "6829817aea02ad1da01f298e3ede23c0"
+SECRETKEY = "25bbaa9d54fbdd17a57d8b2b121d3b04f59cf9cd"
