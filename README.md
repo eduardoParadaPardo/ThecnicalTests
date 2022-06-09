@@ -3,7 +3,7 @@ This technical test has been done with Xcode 13.4 and Swift 5.
 
 ## Content
 For this solution, it has been created in 3 folders. 
-1) The first one where you can find the UML diagrams of the 2 use cases described. And I have created a diagram defining the philosophy used to perform the behavioral tests.
+1) The first one where You will be able to find the C4 model with all the layers of this software architecture pattern. And I have created a diagram defining the philosophy used to perform the behavioral tests.
 2) In the second folder where all the source code is hosted.
 3) In the last folder, you will find the exported file of the postman where the tests with the services have been performed.
 
