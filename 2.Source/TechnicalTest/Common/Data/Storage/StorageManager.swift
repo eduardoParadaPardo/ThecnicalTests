@@ -17,8 +17,8 @@ enum CodingKeys: String, CodingKey {
 }
 
 protocol StorageManagerInput {
-    func getSuperHeroes() -> [SuperHero]
-    func addSuperHeroes(heroList: [SuperHero])
+    func getSuperHeroes() throws -> [SuperHero]
+    func addSuperHeroes(heroList: [SuperHero]) throws
 }
 
 class StorageManager {
@@ -48,38 +48,31 @@ class StorageManager {
         }
     }
     
-    private func fetchHeroList() -> [SuperHero] {
+    private func fetchHeroList() throws -> [SuperHero] {
         let fetchRequest: NSFetchRequest<Hero> = Hero.fetchRequest()
         
-        do {
-            guard let container = self.container else {
-                print("Container Error")
-                return []
-            }
-            
-            let result = try container.viewContext.fetch(fetchRequest)
-            return SuperHero.parseList(heroList: result)
-            
-        } catch {
-            print("Recovery heroes: \(error)")
+        guard let container = self.container else {
+            print("Container Error")
+            throw TTError(type: .dbContainerError)
         }
         
-        return []
+        let result = try container.viewContext.fetch(fetchRequest)
+        return try SuperHero.parseList(heroList: result)
     }
     
-    private func controlAddHero(superHero: SuperHero) {
-        let founded = self.fetchHeroList().filter { hero in
+    private func controlAddHero(superHero: SuperHero) throws {
+        let founded = try self.fetchHeroList().filter { hero in
             return hero.id == superHero.id
         }
         if founded.count == 0 {
-            self.createHero(superHero: superHero)
+            try self.createHero(superHero: superHero)
         }
     }
     
-    private func createHero(superHero: SuperHero) {
+    private func createHero(superHero: SuperHero) throws {
         guard let container = self.container else {
             print("Container Error")
-            return
+            throw TTError(type: .dbContainerError)
         }
         
         container.performBackgroundTask { (context) in
@@ -108,13 +101,13 @@ class StorageManager {
 
 extension StorageManager: StorageManagerInput {
     
-    func getSuperHeroes() -> [SuperHero] {
-        return self.fetchHeroList()
+    func getSuperHeroes() throws -> [SuperHero] {
+        return try self.fetchHeroList()
     }
     
-    func addSuperHeroes(heroList: [SuperHero]) {
-        _ = heroList.map { superHero in
-            self.controlAddHero(superHero: superHero)
+    func addSuperHeroes(heroList: [SuperHero]) throws {
+        _ = try heroList.map { superHero in
+            try self.controlAddHero(superHero: superHero)
         }
     }
 }

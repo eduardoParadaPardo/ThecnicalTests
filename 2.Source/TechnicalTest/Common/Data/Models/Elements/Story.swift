@@ -17,13 +17,13 @@ struct Story: Codable {
     let available: Int
     let itemList: [Item]
     
-    init(json: JSON?) {
+    init(json: JSON?) throws {
         self.available = json?[StoriesKeys.available]?.toInt() ?? 0
-        self.itemList = Item.parseList(json: json?[StoriesKeys.items])
+        self.itemList = try Item.parseList(json: json?[StoriesKeys.items])
     }
     
-    static func parseStoriesJson(json: JSON?) -> Story? {
-        return Story(json: json)
+    static func parseStoriesJson(json: JSON?) throws -> Story? {
+        return try Story(json: json)
     }
     
     // MARK: - Codable

@@ -29,17 +29,17 @@ struct SuperHero {
     var serie: Serie?
     var story: Story?
     
-    init(json: JSON?) {
+    init(json: JSON?) throws {
         self.id = json?[SuperHeroKeys.id]?.toInt() ?? 0
         self.name = json?[SuperHeroKeys.name]?.toString() ?? ""
         self.description = json?[SuperHeroKeys.description]?.toString() ?? ""
         self.image = (json?[SuperHeroKeys.thumbnailPath]?.toString() ?? "") + "." +  (json?[SuperHeroKeys.thumbnailExt]?.toString() ?? "")
-        self.comics = Comic.parseComicJson(json: json?[SuperHeroKeys.comics])
-        self.serie = Serie.parseSeriesJson(json: json?[SuperHeroKeys.series])
-        self.story = Story.parseStoriesJson(json: json?[SuperHeroKeys.stories])
+        self.comics = try Comic.parseComicJson(json: json?[SuperHeroKeys.comics])
+        self.serie = try Serie.parseSeriesJson(json: json?[SuperHeroKeys.series])
+        self.story = try Story.parseStoriesJson(json: json?[SuperHeroKeys.stories])
     }
     
-    init(hero: Hero) {
+    init(hero: Hero) throws {
         self.id = Int(hero.id ?? "0") ?? 0
         self.name = hero.name ?? ""
         self.description = hero.description
@@ -60,30 +60,30 @@ struct SuperHero {
     
     // MARK: - CORE DATA
     
-    static func parseList(heroList: [Hero]) -> [SuperHero] {
-        return heroList.compactMap(parseHeroes)
+    static func parseList(heroList: [Hero]) throws -> [SuperHero] {
+        return try heroList.compactMap(parseHeroes)
     }
     
-    static func parseHeroes(value: Any) -> SuperHero? {
+    static func parseHeroes(value: Any) throws -> SuperHero? {
         guard let hero = value as? Hero else {
             print("Eror parsing")
-            return nil
+            throw TTError(type: .dataNil)
         }
-        return SuperHero(hero: hero)
+        return try SuperHero(hero: hero)
     }
     
     // MARK: - SERVICES
     
-    static func parseList(json: JSON?) -> [SuperHero] {
+    static func parseList(json: JSON?) throws -> [SuperHero] {
         guard let json = json?["data.results"]?.toArray() else {
             print("No result parsing")
-            return []            
+            throw TTError(type: .dataNil)
         }
-        return json.compactMap(parseHeroJson)
+        return try json.compactMap(parseHeroJson)
     }
     
-    static func parseHeroJson(value: Any) -> SuperHero? {
+    static func parseHeroJson(value: Any) throws -> SuperHero? {
         let json = JSON(from: value)
-        return SuperHero(json: json)
+        return try SuperHero(json: json)
     }
 }

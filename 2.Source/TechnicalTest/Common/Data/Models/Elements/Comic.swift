@@ -17,13 +17,18 @@ struct Comic: Codable {
     let available: Int
     let itemList: [Item]
     
-    init(json: JSON?) {
-        self.available = json?[ComicKeys.available]?.toInt() ?? 0
-        self.itemList = Item.parseList(json: json?[ComicKeys.items])
+    init(json: JSON) throws {
+        self.available = json[ComicKeys.available]?.toInt() ?? 0
+        self.itemList = try Item.parseList(json: json[ComicKeys.items])
     }
     
-    static func parseComicJson(json: JSON?) -> Comic? {
-        return Comic(json: json)
+    static func parseComicJson(json: JSON?) throws -> Comic? {
+        guard let json = json else {
+            print("Json is nil")
+            throw TTError(type: .dataNil)
+        }
+
+        return try Comic(json: json)
     }
     
     // MARK: - Codable

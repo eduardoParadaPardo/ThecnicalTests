@@ -22,7 +22,7 @@ struct Item: Codable {
     let name: String
     let type: ItemType?
         
-    init(json: JSON?) {
+    init(json: JSON?) throws {
         self.name = json?[ItemKeys.name]?.toString() ?? ""
         if let type = json?[ItemKeys.type] {
             self.type = ItemType(rawValue: type.toString() ?? "cover")
@@ -31,17 +31,17 @@ struct Item: Codable {
         }
     }
     
-    static func parseList(json: JSON?) -> [Item] {
+    static func parseList(json: JSON?) throws -> [Item] {
         guard let json = json?.toArray() else {
             print("No items result")
-            return []
+            throw TTError(type: .dataNil)
         }
-        return json.compactMap(parsItemJson)
+        return try json.compactMap(parsItemJson)
     }
     
-    static func parsItemJson(value: Any) -> Item? {
+    static func parsItemJson(value: Any) throws -> Item? {
         let json = JSON(from: value)
-        return Item(json: json)
+        return try Item(json: json)
     }
     
     // MARK: - Codable

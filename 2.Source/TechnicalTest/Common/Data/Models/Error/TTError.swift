@@ -16,6 +16,7 @@ class TTError: Error {
         case error(error: Error)
         case dataNil
         case invalidParams
+        case dbContainerError
     }
     
     var type: ErrorType
@@ -35,6 +36,8 @@ class TTError: Error {
             self.text = "We can't recover the data"
         case .invalidParams:
             self.text = "Invalid request params"
+        case .dbContainerError:
+            self.text = "Problem when storage data"
         }
     }
 }

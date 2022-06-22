@@ -38,6 +38,16 @@ class DataManager {
         self.servicesManager = servicesManager
         self.storageManager = storageManager
     }
+    
+    // MARK: - Handler Error
+    
+    private func handleError(error: Error) {
+        if let error = error as? TTError {
+            self.output?.fetchSuperHeroesDidFinish(result: .error(error: error))
+        } else {
+            self.output?.fetchSuperHeroesDidFinish(result: .error(error: TTError(type: .generalError)))
+        }
+    }
 }
 
 // MARK: - DataManagerInput
@@ -45,12 +55,16 @@ class DataManager {
 extension DataManager: DataManagerInput {
     
     func fetchSuperHeroes() {
-        let superHeroList = self.storageManager.getSuperHeroes()
-        if superHeroList.isEmpty {
-            self.servicesManager.fetchSuperHeroes()
-        } else {
-            self.output?.fetchSuperHeroesDidFinish(result: .success(list: superHeroList))
-        }        
+        do {
+            let superHeroList = try self.storageManager.getSuperHeroes()
+            if superHeroList.isEmpty {
+                self.servicesManager.fetchSuperHeroes()
+            } else {
+                self.output?.fetchSuperHeroesDidFinish(result: .success(list: superHeroList))
+            }
+        } catch {
+            self.handleError(error: error)
+        }
     }
     
     func fetchSuperHero(id: String) {
@@ -58,7 +72,12 @@ extension DataManager: DataManagerInput {
     }
     
     func saveSuperHeroes(list: [SuperHero]) {
-        self.storageManager.addSuperHeroes(heroList: list)
+        do {
+            try self.storageManager.addSuperHeroes(heroList: list)
+        } catch {
+            // TODO
+            print(error.localizedDescription)
+        }
     }
 }
 
@@ -70,8 +89,13 @@ extension DataManager: ServicesManagerOutput {
         switch result {
         case .success(let dict):
             let json = JSON(from: dict)
-            let superHeroList = SuperHero.parseList(json: json)
-            self.output?.fetchSuperHeroesDidFinish(result: .success(list: superHeroList))
+            do {
+                let superHeroList = try SuperHero.parseList(json: json)
+                self.output?.fetchSuperHeroesDidFinish(result: .success(list: superHeroList))
+            } catch {
+                self.handleError(error: error)
+            }
+
         case .error(let error):
             self.output?.fetchSuperHeroesDidFinish(result: .error(error: error))
         }
